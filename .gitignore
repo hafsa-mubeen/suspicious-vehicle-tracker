@@ -216,3 +216,33 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# Project-specific
+venv/
+*.pt
+*.jpg
+*.png
+*.mp4
+*.avi
+*.mov
+datasets/
+demo_clips/
+results/figures/*.png
+results/figures/*.jpg
+results/metrics/*.json
+results/metrics/*.csv
+
+# Keep folder structure
+!results/figures/.gitkeep
+!results/metrics/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+
+# Ultralytics auto-generated
+runs/
+
+# Local scratch
+_scratch/
