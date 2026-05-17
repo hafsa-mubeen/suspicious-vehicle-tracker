@@ -20,15 +20,12 @@ TARGET_CLASSES = {
 }
 
 
-class Detector:
-    """Lightweight wrapper around YOLOv8 for our 3-class detection task."""
-
-    def __init__(
-        self,
-        weights: str = "yolov8s.pt",
-        conf_threshold: float = 0.4,
-        device: str = "cpu",
-    ):
+def __init__(
+    self,
+    weights: str = "yolov8s.pt",
+    conf_threshold: float = 0.25,   # was 0.4 — calibrated via threshold sweep on MOT17-04
+    device: str = "cpu",
+):
         """
         Args:
             weights: Path to YOLOv8 weights file. Default 'yolov8s.pt' auto-downloads.
