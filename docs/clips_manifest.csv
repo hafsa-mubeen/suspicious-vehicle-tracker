@@ -1,0 +1,2 @@
+clip_id,filename,source_url,duration_sec,resolution,scene_type,expected_alert,suspicious_period,notes
+clip_01,clip_01_atm_loitering.mp4,https://www.youtube.com/watch?v=Xc6Pxryuz5I,128,640x360,atm,yes,00:00-02:08,real incident footage - two masked individuals loitering with motorcycle near ATM

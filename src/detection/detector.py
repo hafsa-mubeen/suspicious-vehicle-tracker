@@ -7,7 +7,7 @@ that downstream modules (tracker, rule engine) can consume.
 """
 
 from pathlib import Path
-from typing import List, Dict, Union
+from typing import List, Dict
 import numpy as np
 from ultralytics import YOLO
 
@@ -20,16 +20,19 @@ TARGET_CLASSES = {
 }
 
 
-def __init__(
-    self,
-    weights: str = "yolov8s.pt",
-    conf_threshold: float = 0.25,   # was 0.4 — calibrated via threshold sweep on MOT17-04
-    device: str = "cpu",
-):
+class Detector:
+    """Lightweight wrapper around YOLOv8 for our 3-class detection task."""
+
+    def __init__(
+        self,
+        weights: str = "yolov8s.pt",
+        conf_threshold: float = 0.25,  # calibrated via threshold sweep on MOT17-04
+        device: str = "cpu",
+    ):
         """
         Args:
             weights: Path to YOLOv8 weights file. Default 'yolov8s.pt' auto-downloads.
-            conf_threshold: Minimum confidence score to keep a detection. Default 0.4.
+            conf_threshold: Minimum confidence score to keep a detection. Default 0.25.
             device: 'cpu' or 'cuda'. Use 'cuda' on Kaggle, 'cpu' on local laptop.
         """
         self.model = YOLO(weights)
@@ -49,7 +52,6 @@ def __init__(
                 - "class": class name string ("person", "bicycle", "motorcycle")
                 - "confidence": float in [0, 1]
         """
-        # Run YOLOv8 inference. verbose=False suppresses per-frame logging.
         results = self.model(
             frame,
             conf=self.conf_threshold,
@@ -65,7 +67,6 @@ def __init__(
                     continue
 
                 # YOLO returns xyxy; we convert to xywh (top-left + width/height)
-                # to match MOT format and OpenCV conventions downstream.
                 x1, y1, x2, y2 = box.xyxy[0].tolist()
                 w = x2 - x1
                 h = y2 - y1
@@ -82,20 +83,19 @@ def __init__(
 if __name__ == "__main__":
     # Quick self-test: run on the COCO sample bus image.
     import cv2
+    import urllib.request
 
     print("Initializing detector with yolov8s.pt (will download if needed)...")
-    detector = Detector(weights="yolov8s.pt", conf_threshold=0.4, device="cpu")
+    detector = Detector(weights="yolov8s.pt", conf_threshold=0.25, device="cpu")
     print("Detector ready.\n")
 
-    # Use the bus.jpg we already downloaded into _scratch/
     img_path = Path("_scratch/bus.jpg")
+    img_path.parent.mkdir(exist_ok=True)
     if not img_path.exists():
-        # Fall back to downloading it
-        import urllib.request
         print("Downloading bus.jpg sample...")
         urllib.request.urlretrieve(
             "https://ultralytics.com/images/bus.jpg",
-            "_scratch/bus.jpg",
+            str(img_path),
         )
 
     frame = cv2.imread(str(img_path))
