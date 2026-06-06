@@ -1,4 +1,4 @@
-clip_id,filename,source_url,duration_sec,resolution,scene_type,expected_alert,suspicious_period,notes
-clip_01,clip_01_atm_loitering.mp4,https://www.youtube.com/watch?v=Xc6Pxryuz5I,128,640x360,atm,yes,00:00-02:08,real incident footage - two masked individuals loitering with motorcycle near ATM
-clip_02,clip_02_normal_traffic.mp4,real_cctv,49,1280x576,street,no,N/A,real CCTV - normal traffic with pedestrians and one motorcycle - tests rule false-positive control on moderate density
-clip_03,clip_03_busy_road.mp4,real_cctv,67,1280x576,street,no,N/A,real CCTV - heavy mixed traffic with multiple motorcycles and pedestrians - stress-tests rule specificity
+clip_id,filename,source_url,duration_sec,resolution,scene_type,expected_alert,suspicious_period,notes,roi_polygon
+clip_01,clip_01_atm_loitering.mp4,https://www.youtube.com/watch?v=Xc6Pxryuz5I,128,640x360,atm,yes,00:00-02:08,real incident footage - two masked individuals loitering with motorcycle near ATM,"[[200,80],[500,80],[500,240],[200,240]]"
+clip_02,clip_02_normal_traffic.mp4,real_cctv,49,1280x576,street,no,N/A,real CCTV - normal traffic with pedestrians and one motorcycle - tests rule false-positive control on moderate density,"[[100,150],[900,150],[900,450],[100,450]]"
+clip_03,clip_03_busy_road.mp4,real_cctv,67,1280x576,street,no,N/A,real CCTV - heavy mixed traffic with multiple motorcycles and pedestrians - stress-tests rule specificity,"[[100,150],[900,150],[900,450],[100,450]]"

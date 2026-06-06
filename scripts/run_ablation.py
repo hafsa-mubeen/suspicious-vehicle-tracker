@@ -5,7 +5,7 @@ import cv2
 
 from src.detection.detector import Detector
 from src.tracking.tracker import Tracker
-from src.tracking.roi import DEFAULT_ROI
+from src.tracking.roi import ROI
 from src.rule_engine.pair_matcher import match_pairs
 from src.rule_engine.rule_engine import RuleEngine
 
@@ -18,8 +18,7 @@ CONFIGS = [
     {"name": "dwell_motion", "use_dwell": True,  "use_motion": True},
 ]
 
-def run_clip(video_path, use_dwell, use_motion):
-    """Run pipeline on one clip, return list of alert dicts."""
+def run_clip(video_path, roi, use_dwell, use_motion):
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
         print(f"  ERROR: cannot open {video_path}")
@@ -45,7 +44,7 @@ def run_clip(video_path, use_dwell, use_motion):
         tracks       = tracker.update(detections, frame)
         pairs        = match_pairs(tracks)
         tracks_by_id = {t["track_id"]: t for t in tracks}
-        new_alerts   = rule_engine.update(pairs, tracks_by_id, DEFAULT_ROI, timestamp=timestamp)
+        new_alerts   = rule_engine.update(pairs, tracks_by_id, roi, timestamp=timestamp)
         alerts.extend(new_alerts)
 
     cap.release()
@@ -53,10 +52,6 @@ def run_clip(video_path, use_dwell, use_motion):
 
 
 def evaluate(alerts, expected_alert):
-    """
-    Simple precision/recall/FP-rate for one clip.
-    expected_alert: "yes" or "no"
-    """
     fired = len(alerts) > 0
     tp = 1 if (fired and expected_alert == "yes") else 0
     fp = 1 if (fired and expected_alert == "no")  else 0
@@ -66,7 +61,6 @@ def evaluate(alerts, expected_alert):
 
 
 def main():
-    # Load manifest
     clips = []
     with open(MANIFEST_PATH, newline="") as f:
         reader = csv.DictReader(f)
@@ -84,9 +78,12 @@ def main():
         for clip in clips:
             video_path = f"clips/{clip['filename']}"
             expected   = clip["expected_alert"]
+            roi_polygon = json.loads(clip["roi_polygon"])
+            roi = ROI(roi_polygon)
+
             print(f"  Processing {clip['clip_id']} (expected={expected})...")
 
-            alerts  = run_clip(video_path, config["use_dwell"], config["use_motion"])
+            alerts  = run_clip(video_path, roi, config["use_dwell"], config["use_motion"])
             metrics = evaluate(alerts, expected)
 
             tp_total += metrics["tp"]
@@ -113,7 +110,6 @@ def main():
 
         print(f"  => precision={precision:.3f} recall={recall:.3f} fp_rate={fp_rate:.3f}")
 
-    # Save results
     with open(RESULTS_PATH, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=rows[0].keys())
         writer.writeheader()
