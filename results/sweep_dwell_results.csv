@@ -1,0 +1,13 @@
+dwell_threshold,config,precision,recall,fp_rate,tp,fp,fn,tn
+15,dwell_only,0.5,1.0,0.5,1,1,0,1
+15,motion_only,0.333,1.0,1.0,1,2,0,0
+15,dwell_motion,0.5,1.0,0.5,1,1,0,1
+30,dwell_only,0.5,1.0,0.5,1,1,0,1
+30,motion_only,0.333,1.0,1.0,1,2,0,0
+30,dwell_motion,0.5,1.0,0.5,1,1,0,1
+45,dwell_only,1.0,1.0,0.0,1,0,0,2
+45,motion_only,0.333,1.0,1.0,1,2,0,0
+45,dwell_motion,1.0,1.0,0.0,1,0,0,2
+60,dwell_only,1.0,1.0,0.0,1,0,0,2
+60,motion_only,0.333,1.0,1.0,1,2,0,0
+60,dwell_motion,1.0,1.0,0.0,1,0,0,2
