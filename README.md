@@ -85,7 +85,7 @@ python scripts/ingest_pipeline_output.py results/clip01_output.txt
 streamlit run src/dashboard/app.py
 ```
 
-> ⚠️ CPU-only inference takes 15–25 min per clip. Use `ps aux | grep run_pipeline` to verify it's running if the terminal looks frozen — output is buffered until completion.
+>  CPU-only inference takes 15–25 min per clip. Use `ps aux | grep run_pipeline` to verify it's running if the terminal looks frozen — output is buffered until completion.
 
 ---
 
@@ -118,12 +118,12 @@ suspicious-vehicle-tracker/
 
 ## Dashboard Features
 
-- 📹 Upload a clip or choose from library
-- 🔔 Live alerts panel with severity filter and search
-- ⚠️ Event timeline with clickable markers
-- 🔍 Alert investigation panel with real cropped snapshot
-- 🗺️ ROI definition tool — draw directly on the first frame
-- 📥 Export alert evidence as JSON
+-  Upload a clip or choose from library
+-  Live alerts panel with severity filter and search
+-  Event timeline with clickable markers
+-  Alert investigation panel with real cropped snapshot
+-  ROI definition tool — draw directly on the first frame
+-  Export alert evidence as JSON
 
 ---
 
