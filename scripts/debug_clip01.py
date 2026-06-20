@@ -30,11 +30,14 @@ def main():
 
     while True:
         ret, frame = cap.read()
+        
         if not ret:
             break
 
         timestamp    = frame_idx / fps
         frame_idx   += 1
+        if frame_idx % 100 == 0:
+             print(f"frame {frame_idx}/4002")
 
         detections   = detector.detect(frame)
         tracks       = tracker.update(detections, frame)

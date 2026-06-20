@@ -55,8 +55,23 @@ def run(video_path, roi, use_dwell=True, use_motion=True):
         tracks_by_id = {t["track_id"]: t for t in tracks}
         alerts = rule_engine.update(pairs, tracks_by_id, roi, timestamp=timestamp)
 
-        # Print alerts as JSON
         for alert in alerts:
+            x, y, bw, bh = alert["snapshot_bbox"]
+            x, y, bw, bh = int(x), int(y), int(bw), int(bh)
+            x = max(0, x)
+            y = max(0, y)
+            crop = frame[y:y+bh, x:x+bw]
+
+            import os
+            os.makedirs("results/snapshots", exist_ok=True)
+            video_stem = os.path.splitext(os.path.basename(video_path))[0]
+            snapshot_filename = f"{video_stem}_{alert['timestamp']:.2f}.jpg"
+            snapshot_path = os.path.join("results/snapshots", snapshot_filename)
+            cv2.imwrite(snapshot_path, crop)
+
+            alert["snapshot_path"] = snapshot_path
+            alert["video_source"] = os.path.basename(video_path)
+
             print(json.dumps(alert))
 
     cap.release()
