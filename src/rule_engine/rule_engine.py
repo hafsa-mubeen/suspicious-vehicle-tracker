@@ -28,7 +28,14 @@ class RuleEngine:
 
     def _pair_key(self, person_id, vehicle_id):
         return (person_id, vehicle_id)
-
+    def _rule_label(self):
+        if self.use_dwell and self.use_motion:
+            return "Dwell + motion stagnation"
+        elif self.use_dwell:
+            return "Dwell only"
+        elif self.use_motion:
+            return "Motion stagnation"
+        return "None"
     def update(self, pairs, tracks_by_id, roi, timestamp=None):
         """
         pairs: output of match_pairs()
@@ -124,7 +131,9 @@ class RuleEngine:
                 "person_id":    person_id,
                 "vehicle_id":   vehicle_id,
                 "roi_id":       0,
-                "snapshot_bbox": snapshot_bbox
+                "snapshot_bbox": snapshot_bbox,
+                "rule_triggered": self._rule_label(),
+                "dwell_time_at_trigger": dwell_time
             })
 
         return alerts

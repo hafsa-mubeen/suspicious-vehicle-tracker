@@ -40,7 +40,7 @@ st.caption("Real-time multi-class detection and behavioral alert system for flag
 
 severities = ["Critical", "High", "Medium", "Low"]
 severity_colors = {"Critical": "🔴", "High": "🟠", "Medium": "🟡", "Low": "🟢"}
-rules = ["Dwell + motion stagnation", "Dwell only", "Motion stagnation"]
+
 
 st.divider()
 
@@ -121,7 +121,7 @@ with left:
         if ret:
             st.markdown("**Event timeline**")
             if alerts:
-                timeline_df = pd.DataFrame(alerts, columns=["id", "timestamp", "person_id", "vehicle_id", "roi_id", "snapshot_path", "video_source"])
+                timeline_df = pd.DataFrame(alerts, columns=["id", "timestamp", "person_id", "vehicle_id", "roi_id", "snapshot_path", "video_source", "rule_triggered", "dwell_time_at_trigger"])
                 duration = frame_count / fps
                 cols = st.columns(len(timeline_df))
                 for i, (_, row) in enumerate(timeline_df.iterrows()):
@@ -182,9 +182,9 @@ with right:
         severity_filter = st.multiselect("Severity", severities, default=severities)
 
         for i, alert in enumerate(alerts):
-            _, ts, person_id, vehicle_id, roi_id, snapshot, source = alert
+            alert_id, ts, person_id, vehicle_id, roi_id, snapshot, source, rule_triggered, dwell_time_at_trigger = alert
             severity = "Critical" if ts > 120 else "High" if ts > 113 else "Medium"
-            rule = rules[i % 3]
+            rule = rule_triggered or "Not recorded"
 
             if search and search not in str(person_id) and search not in str(vehicle_id):
                 continue
@@ -196,20 +196,19 @@ with right:
                 st.caption(f"Person {person_id} · Vehicle {vehicle_id} · ROI {roi_id}")
                 st.caption(f"Rule: {rule}")
                 if st.button("Investigate", key=f"inv_{i}", use_container_width=True):
-                    st.session_state["selected_alert"] = alert[0]
+                    st.session_state["selected_alert"] = alert_id
 
 if "selected_alert" in st.session_state and alerts:
     st.divider()
     st.subheader("Alert investigation")
 
-    df = pd.DataFrame(alerts, columns=["id", "timestamp", "person_id", "vehicle_id", "roi_id", "snapshot_path", "video_source"])
+    df = pd.DataFrame(alerts, columns=["id", "timestamp", "person_id", "vehicle_id", "roi_id", "snapshot_path", "video_source", "rule_triggered", "dwell_time_at_trigger"])
     sel = df[df["id"] == st.session_state["selected_alert"]]
 
     if not sel.empty:
         row = sel.iloc[0]
-        idx = sel.index[0]
         severity = "Critical" if row["timestamp"] > 120 else "High" if row["timestamp"] > 113 else "Medium"
-        rule = rules[idx % 3]
+        rule = row["rule_triggered"] if pd.notna(row["rule_triggered"]) else "Not recorded"
 
         with st.container(border=True):
             col_img, col_meta = st.columns([1, 1])
@@ -232,7 +231,8 @@ if "selected_alert" in st.session_state and alerts:
                 st.markdown(f"**Person ID:** {row['person_id']}")
                 st.markdown(f"**Vehicle ID:** {row['vehicle_id']}")
                 st.markdown(f"**ROI:** {row['roi_id']}")
-                st.markdown(f"**Dwell time:** > 45s")
+                dwell_display = f"{row['dwell_time_at_trigger']:.2f}s" if pd.notna(row['dwell_time_at_trigger']) else "Not recorded"
+                st.markdown(f"**Dwell time:** {dwell_display}")
                 st.markdown(f"**Rule triggered:** {rule}")
                 st.markdown(f"**Confidence:** ≥ 0.25")
                 st.markdown(f"**Source:** {row['video_source']}")

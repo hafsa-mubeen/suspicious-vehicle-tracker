@@ -18,7 +18,9 @@ def ingest(output_file):
                         vehicle_id=int(alert["vehicle_id"]),
                         roi_id=alert["roi_id"],
                         snapshot_path=alert.get("snapshot_path", "unknown.jpg"),
-                        video_source=alert.get("video_source", "unknown.mp4")
+                        video_source=alert.get("video_source", "unknown.mp4"),
+                        rule_triggered=alert.get("rule_triggered"),
+                        dwell_time_at_trigger=alert.get("dwell_time_at_trigger")
                     )
                     count += 1
                 except (json.JSONDecodeError, KeyError) as e:
