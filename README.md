@@ -19,6 +19,8 @@ Each flagged event is stored with:
 - Full metadata exportable as JSON
 
 ---
+## Screenshot
+![Uploading Screenshot 2026-06-21 at 9.17.21 PM.png…]()
 
 ## Demo
 
