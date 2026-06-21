@@ -22,7 +22,11 @@ Each flagged event is stored with:
 
 ## Demo
 
-<!-- Add demo gif or screenshot here -->
+
+
+https://github.com/user-attachments/assets/cead290c-5164-4608-9f5f-e9a6af0fb5ad
+
+
 
 ---
 
