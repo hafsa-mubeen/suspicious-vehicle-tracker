@@ -20,7 +20,8 @@ Each flagged event is stored with:
 
 ---
 ## Screenshot
-<img width="1470" height="923" alt="Screenshot 2026-06-21 at 9 17 57 PM" src="https://github.com/user-attachments/assets/2e88a6d7-6f22-4185-a628-49462ddecc53" />
+
+<img width="1470" height="923" alt="Screenshot 2026-06-21 at 9 17 57 PM" src="https://github.com/user-attachments/assets/a50291b6-cfbb-403c-bce0-3d348325f8ac" />
 
 
 ## Demo
